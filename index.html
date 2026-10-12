@@ -2,448 +2,518 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orange Gallery 🍊</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100d0a">
+<title>ORANGE — Fruit World 🍊</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+:root {
+  --orange:#ff922e;
+  --bg:#100d0a;
+  --glass:rgba(255,255,255,.075);
+  --line:rgba(255,255,255,.15);
+  --muted:#bcb2a8;
+}
+* {box-sizing:border-box;margin:0;padding:0}
+body {
+  min-height:100vh;
+  color:#fff8ef;
+  background:
+    radial-gradient(ellipse at 10% 0%,#61300d,transparent 38%),
+    radial-gradient(ellipse at 100% 65%,#3a1c09,transparent 35%),
+    var(--bg);
+  background-attachment:fixed;
+  font-family:system-ui,Arial,sans-serif;
+}
+button,input {font:inherit}
+button {color:inherit;cursor:pointer}
+.glass {
+  background:var(--glass);
+  border:1px solid var(--line);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+}
+header {
+  position:sticky;top:0;z-index:5;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;padding:15px 5%;
+  background:rgba(16,13,10,.8);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(20px);
+}
+.brand {font-size:21px;font-weight:850;letter-spacing:1px}
+.brand span {color:var(--orange)}
+.actions {display:flex;gap:8px;flex-wrap:wrap}
+.btn {
+  padding:10px 15px;border:1px solid var(--line);
+  border-radius:99px;background:var(--glass);
+  transition:.2s;
+}
+.btn:hover {background:#ffffff25;transform:translateY(-2px)}
+.primary {
+  color:#241305;background:var(--orange);
+  border-color:var(--orange);font-weight:750;
+}
+.hero {
+  max-width:950px;margin:auto;padding:75px 22px 55px;text-align:center;
+}
+.eyebrow {
+  display:inline-block;padding:8px 14px;margin-bottom:22px;
+  color:#ffc078;border:1px solid #ffad533c;
+  border-radius:99px;background:#ff9d1510;font-size:13px;
+}
+h1 {font-size:clamp(43px,8vw,82px);line-height:1.08;margin-bottom:20px}
+h1 span {color:var(--orange)}
+.hero p {max-width:650px;margin:auto;color:var(--muted);line-height:1.8}
+.hero-buttons {display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:28px}
+.section {max-width:1300px;margin:auto;padding:25px 22px 65px;scroll-margin-top:85px}
+.section-heading {margin-bottom:23px}
+.section-heading h2 {font-size:29px}
+.section-heading p {margin-top:7px;color:var(--muted);line-height:1.7}
+.toolbar {display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.search {
+  width:min(100%,330px);padding:12px 16px;
+  color:white;border-radius:99px;outline:none;
+}
+.search::placeholder {color:var(--muted)}
+.filters {display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter {
+  padding:8px 14px;border:1px solid var(--line);
+  border-radius:99px;background:transparent;color:var(--muted);
+}
+.filter.active {background:var(--orange);color:#241305;border-color:var(--orange)}
+.gallery {
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;
+}
+.photo {
+  position:relative;height:290px;overflow:hidden;
+  border:1px solid var(--line);border-radius:22px;
+  background:#24170f;cursor:pointer;transition:.25s;
+}
+.photo:hover {transform:translateY(-5px);border-color:#ffb35b88}
+.photo img {width:100%;height:100%;object-fit:cover;display:block;transition:.4s}
+.photo:hover img {transform:scale(1.06)}
+.photo:after {
+  content:"";position:absolute;inset:40% 0 0;
+  background:linear-gradient(transparent,#000c);pointer-events:none;
+}
+.photo-info {position:absolute;z-index:1;bottom:0;inset-inline:0;padding:18px}
+.photo-info h3 {font-size:18px}
+.photo-info p {margin-top:5px;color:#ffffffbd;font-size:13px}
+.empty {display:none;text-align:center;padding:35px;color:var(--muted)}
+.fruit-card {height:300px}
+.fruit-card .photo-info {display:flex;justify-content:space-between;align-items:end}
+.fruit-card .emoji {font-size:28px}
+footer {padding:28px;text-align:center;color:var(--muted);border-top:1px solid #ffffff12}
 
-    :root {
-      --orange: #ff8c24;
-      --glass: rgba(255, 255, 255, 0.13);
-      --border: rgba(255, 255, 255, 0.25);
-    }
-
-    body {
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      color: white;
-      background:
-        radial-gradient(circle at 15% 10%, #ff9b38 0, transparent 35%),
-        radial-gradient(circle at 85% 80%, #a83208 0, transparent 40%),
-        linear-gradient(135deg, #351204, #111111 65%);
-      background-attachment: fixed;
-    }
-
-    header {
-      padding: 24px 6%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .logo {
-      font-size: 25px;
-      font-weight: bold;
-    }
-
-    .glass {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
-
-    button {
-      color: white;
-      cursor: pointer;
-      font-size: 15px;
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      padding: 11px 18px;
-      background: var(--glass);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      transition: 0.25s;
-    }
-
-    button:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateY(-2px);
-    }
-
-    .hero {
-      text-align: center;
-      padding: 65px 20px 45px;
-    }
-
-    .hero h1 {
-      font-size: clamp(42px, 8vw, 78px);
-      margin-bottom: 18px;
-      letter-spacing: -2px;
-    }
-
-    .hero h1 span {
-      color: var(--orange);
-    }
-
-    .hero p {
-      color: rgba(255, 255, 255, 0.75);
-      font-size: 18px;
-      line-height: 1.7;
-    }
-
-    .controls {
-      max-width: 1100px;
-      margin: 0 auto 28px;
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .search {
-      flex: 1;
-      min-width: 180px;
-      max-width: 350px;
-      padding: 13px 18px;
-      color: white;
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      outline: none;
-      background: var(--glass);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      font-size: 15px;
-    }
-
-    .search::placeholder {
-      color: rgba(255, 255, 255, 0.65);
-    }
-
-    .gallery {
-      max-width: 1250px;
-      margin: 0 auto;
-      padding: 0 20px 60px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    .photo {
-      position: relative;
-      overflow: hidden;
-      height: 280px;
-      border-radius: 24px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.08);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .photo:hover {
-      transform: translateY(-6px) scale(1.015);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
-    }
-
-    .photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.5s;
-    }
-
-    .photo:hover img {
-      transform: scale(1.08);
-    }
-
-    .photo::after {
-      content: "";
-      position: absolute;
-      inset: 45% 0 0;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
-      pointer-events: none;
-    }
-
-    .photo-title {
-      position: absolute;
-      bottom: 18px;
-      right: 18px;
-      left: 18px;
-      z-index: 1;
-      font-size: 17px;
-      font-weight: bold;
-      text-shadow: 0 2px 8px black;
-    }
-
-    .empty {
-      display: none;
-      text-align: center;
-      padding: 40px 20px;
-      color: rgba(255, 255, 255, 0.75);
-    }
-
-    footer {
-      text-align: center;
-      padding: 25px;
-      color: rgba(255, 255, 255, 0.6);
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .viewer {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      inset: 0;
-      padding: 25px;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.88);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .viewer.open {
-      display: flex;
-    }
-
-    .viewer img {
-      max-width: 92vw;
-      max-height: 85vh;
-      object-fit: contain;
-      border-radius: 15px;
-      box-shadow: 0 15px 50px black;
-    }
-
-    .close {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 26px;
-      width: 48px;
-      height: 48px;
-      padding: 0;
-    }
-
-    @media (max-width: 600px) {
-      header {
-        padding: 20px;
-      }
-
-      .hero {
-        padding-top: 45px;
-      }
-
-      .gallery {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        padding-inline: 12px;
-      }
-
-      .photo {
-        height: 210px;
-        border-radius: 17px;
-      }
-
-      .photo-title {
-        font-size: 14px;
-        bottom: 12px;
-        right: 12px;
-      }
-
-      .controls {
-        padding: 0 12px;
-      }
-
-      .search {
-        max-width: none;
-      }
-    }
-  </style>
+/* Full-screen fruit details */
+.detail {
+  display:none;position:fixed;inset:0;z-index:20;
+  overflow-y:auto;overscroll-behavior:contain;
+  background:#100d0a;
+}
+.detail.open {display:block}
+.detail-top {
+  height:min(62vh,520px);min-height:290px;position:relative;
+  background:#24170f;
+}
+.detail-top img {width:100%;height:100%;object-fit:cover;display:block}
+.detail-top:after {
+  content:"";position:absolute;inset:25% 0 0;
+  background:linear-gradient(transparent,#100d0a);
+}
+.close {
+  position:fixed;top:16px;inset-inline-start:16px;z-index:3;
+  width:46px;height:46px;border-radius:50%;
+  border:1px solid #ffffff55;background:#16120dcc;
+  font-size:25px;backdrop-filter:blur(15px);
+}
+.detail-title {
+  position:absolute;z-index:2;bottom:25px;inset-inline:7%;
+}
+.detail-title h2 {font-size:clamp(35px,7vw,65px)}
+.detail-title p {color:#e3d8ce;margin-top:8px}
+.detail-content {max-width:1000px;margin:auto;padding:25px 22px 65px}
+.intro {color:var(--muted);line-height:1.8;margin-bottom:25px}
+.nutrition-head {display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.nutrition-head h3 {font-size:25px}
+.nutrition-head span {font-size:13px;color:var(--muted)}
+.nutrition-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.nutrient {
+  padding:18px;border:1px solid var(--line);border-radius:18px;
+  background:var(--glass);min-width:0;
+}
+.nutrient .label {font-size:13px;color:var(--muted)}
+.nutrient .value {font-size:24px;font-weight:800;margin-top:7px;overflow-wrap:anywhere}
+.nutrient .unit {font-size:12px;color:var(--muted)}
+.subheading {font-size:22px;margin:32px 0 14px}
+.vitamin-list {display:grid;gap:10px}
+.vitamin {
+  padding:15px 17px;border:1px solid var(--line);
+  border-radius:15px;background:var(--glass);
+}
+.vitamin strong {color:#ffc078}
+.note {
+  margin-top:25px;padding:16px;border-radius:14px;
+  border:1px solid #ffad5335;color:var(--muted);
+  font-size:13px;line-height:1.8;
+}
+.back-link {margin-bottom:18px}
+@media(max-width:800px) {
+  .gallery {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .photo {height:245px}
+}
+@media(max-width:500px) {
+  header {padding:12px}
+  .brand {font-size:17px}
+  .btn {padding:9px 11px;font-size:13px}
+  .hero {padding:58px 18px 40px}
+  .section {padding:20px 12px 45px}
+  .gallery {gap:10px}
+  .photo {height:215px;border-radius:16px}
+  .photo-info {padding:12px}
+  .photo-info h3 {font-size:15px}
+  .photo-info p {font-size:11px}
+  .fruit-card {height:225px}
+  .nutrition-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .nutrient {padding:13px}
+  .nutrient .value {font-size:21px}
+  .detail-content {padding:20px 14px 45px}
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after {transition:none!important}
+}
+</style>
 </head>
 
 <body>
-  <header>
-    <div class="logo">🍊 Orange Gallery</div>
-    <button id="languageButton" onclick="toggleLanguage()">
-      English
-    </button>
-  </header>
-
-  <section class="hero">
-    <h1 id="heading">עולם של <span>תפוזים</span></h1>
-    <p id="subtitle">
-      גלריה של צבע, טבע ורעננות.<br>
-      כל התמונות במקום אחד.
-    </p>
-  </section>
-
-  <section class="controls">
-    <input
-      class="search"
-      id="search"
-      type="search"
-      placeholder="חפש תמונות..."
-      aria-label="חיפוש תמונות"
-    >
-    <button id="countButton" type="button">🍊 כל התמונות</button>
-  </section>
-
-  <main class="gallery" id="gallery"></main>
-  <div class="empty" id="empty">לא נמצאו תמונות 🍊</div>
-
-  <div class="viewer" id="viewer" role="dialog" aria-modal="true"
-       aria-label="תמונה מוגדלת" onclick="closeViewer(event)">
-    <button class="close" aria-label="סגור" onclick="closeViewer()">
-      ×
-    </button>
-    <img id="viewerImage" src="" alt="Orange enlarged">
+<header>
+  <div class="brand">🍊 <span>ORANGE</span></div>
+  <div class="actions">
+    <button class="btn" id="langBtn">English</button>
+    <button class="btn" id="fruitNav">🍎 עולם הפירות</button>
   </div>
+</header>
 
-  <footer id="footer">
-    נוצר באהבה לתפוזים 🍊
-  </footer>
+<main id="mainPage">
+  <section class="hero">
+    <div class="eyebrow" id="eyebrow">✦ עולם של צבע ורעננות ✦</div>
+    <h1 id="heroTitle">העולם דרך<br><span>צבע כתום.</span></h1>
+    <p id="heroDesc">גלו את עולם התפוזים בגלריה מודרנית עם תמונות, צבעים וטבע בעיצוב Liquid Glass.</p>
+    <div class="hero-buttons">
+      <button class="btn primary" id="galleryNav">לגלריית התפוזים ↓</button>
+      <button class="btn" id="fruitNavHero">גלו את עולם הפירות 🍉</button>
+    </div>
+  </section>
 
-  <script>
-    const photos = [
-      {
-        title: "תפוזים טריים",
-        titleEn: "Fresh Oranges",
-        image: "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=900&q=85"
-      },
-      {
-        title: "תפוז על העץ",
-        titleEn: "Orange on a Tree",
-        image: "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=900&q=85"
-      },
-      {
-        title: "מיץ תפוזים",
-        titleEn: "Orange Juice",
-        image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=900&q=85"
-      },
-      {
-        title: "תפוז חתוך",
-        titleEn: "Sliced Orange",
-        image: "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=900&q=85"
-      },
-      {
-        title: "צבע כתום",
-        titleEn: "Orange Colors",
-        image: "https://images.unsplash.com/photo-1557800636-894a64c1696f?auto=format&fit=crop&w=900&q=85"
-      },
-      {
-        title: "פירות הדר",
-        titleEn: "Citrus Fruits",
-        image: "https://images.unsplash.com/photo-1596591606975-97ee5cef3a1e?auto=format&fit=crop&w=900&q=85"
-      },
-      {
-        title: "טבע ורעננות",
-        titleEn: "Nature and Freshness",
-        image: "https://images.unsplash.com/photo-1580052614034-c55d20bfee3b?auto=format&fit=crop&w=900&q=85"
-      },
-      {
-        title: "תפוז מקרוב",
-        titleEn: "Orange Close-Up",
-        image: "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=900&q=85"
-      }
-    ];
+  <section class="section" id="orangeSection">
+    <div class="section-heading">
+      <h2 id="orangeHeading">🍊 גלריית התפוזים</h2>
+      <p id="orangeDesc">התמונות האהובות עליכם, במקום אחד.</p>
+    </div>
+    <div class="toolbar">
+      <input class="search glass" id="orangeSearch" placeholder="🔎 חיפוש בגלריה...">
+    </div>
+    <div class="gallery" id="orangeGallery"></div>
+    <div class="empty" id="orangeEmpty">לא נמצאו תמונות.</div>
+  </section>
 
-    let english = false;
+  <section class="section" id="fruitSection">
+    <div class="section-heading">
+      <h2 id="fruitHeading">🍎 עולם הפירות והבריאות</h2>
+      <p id="fruitDesc">בחרו פרי כדי לגלות את הוויטמינים, המינרלים והערכים התזונתיים שלו.</p>
+    </div>
+    <div class="toolbar">
+      <input class="search glass" id="fruitSearch" placeholder="🔎 חיפוש פרי...">
+    </div>
+    <div class="filters" id="fruitFilters">
+      <button class="filter active" data-category="all" id="filterAll">הכול</button>
+      <button class="filter" data-category="citrus" id="filterCitrus">פירות הדר</button>
+      <button class="filter" data-category="berries" id="filterBerries">פירות יער</button>
+      <button class="filter" data-category="other" id="filterOther">פירות נוספים</button>
+    </div>
+    <div class="gallery" id="fruitGallery"></div>
+    <div class="empty" id="fruitEmpty">לא נמצאו פירות.</div>
+  </section>
+</main>
 
-    const gallery = document.getElementById("gallery");
-    const search = document.getElementById("search");
-    const viewer = document.getElementById("viewer");
-    const viewerImage = document.getElementById("viewerImage");
+<footer>🍊 ORANGE — <span id="footerText">עולם של פירות, צבע וידע.</span></footer>
 
-    function renderGallery() {
-      const term = search.value.toLowerCase().trim();
+<!-- Full-screen fruit page: scroll down for nutrition -->
+<section class="detail" id="fruitDetail" aria-label="פרטי הפרי">
+  <button class="close" id="closeDetail" aria-label="חזרה">×</button>
+  <div class="detail-top">
+    <img id="detailImage" src="" alt="">
+    <div class="detail-title">
+      <h2 id="detailTitle"></h2>
+      <p id="detailSubtitle"></p>
+    </div>
+  </div>
+  <div class="detail-content">
+    <button class="btn back-link" id="backToFruits">← חזרה לכל הפירות</button>
+    <p class="intro" id="detailIntro"></p>
+    <div class="nutrition-head">
+      <h3 id="nutritionHeading">ערכים תזונתיים</h3>
+      <span id="per100">לכל 100 גרם של פרי טרי</span>
+    </div>
+    <div class="nutrition-grid" id="nutritionGrid"></div>
+    <h3 class="subheading" id="vitaminHeading">ויטמינים ומינרלים</h3>
+    <div class="vitamin-list" id="vitaminList"></div>
+    <div class="note" id="nutritionNote">
+      הנתונים הם אומדנים כלליים ל־100 גרם פרי טרי. הערכים משתנים לפי הזן, הבשלות והגודל. המידע נועד ללמידה ואינו תחליף לייעוץ רפואי.
+    </div>
+  </div>
+</section>
 
-      const filtered = photos.filter(photo => {
-        const title = english ? photo.titleEn : photo.title;
-        return title.toLowerCase().includes(term);
-      });
+<script>
+const fruits = [
+  {
+    id:"orange", he:"תפוז", en:"Orange", emoji:"🍊", category:"citrus",
+    image:"https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=1100&q=85",
+    introHe:"תפוז הוא פרי הדר שמכיל ויטמין C, סיבים תזונתיים ואשלגן.",
+    introEn:"Oranges are citrus fruits containing vitamin C, dietary fiber and potassium.",
+    calories:47,protein:0.9,carbs:11.8,fat:0.1,fiber:2.4,sugar:9.4,
+    vitamins:[
+      ["ויטמין C","53.2 מ״ג"],["ויטמין B9 (פולאט)","30 מק״ג"],
+      ["אשלגן","181 מ״ג"],["סידן","40 מ״ג"]
+    ],
+    vitaminsEn:[
+      ["Vitamin C","53.2 mg"],["Vitamin B9 (Folate)","30 µg"],
+      ["Potassium","181 mg"],["Calcium","40 mg"]
+    ]
+  },
+  {
+    id:"apple",he:"תפוח",en:"Apple",emoji:"🍎",category:"other",
+    image:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=1100&q=85",
+    introHe:"תפוח עם קליפה מספק סיבים תזונתיים ופחמימות.",
+    introEn:"An apple with its skin provides dietary fiber and carbohydrates.",
+    calories:52,protein:0.3,carbs:13.8,fat:0.2,fiber:2.4,sugar:10.4,
+    vitamins:[
+      ["ויטמין C","4.6 מ״ג"],["ויטמין K","2.2 מק״ג"],
+      ["אשלגן","107 מ״ג"],["ויטמין B6","0.04 מ״ג"]
+    ],
+    vitaminsEn:[
+      ["Vitamin C","4.6 mg"],["Vitamin K","2.2 µg"],
+      ["Potassium","107 mg"],["Vitamin B6","0.04 mg"]
+    ]
+  },
+  {
+    id:"banana",he:"בננה",en:"Banana",emoji:"🍌",category:"other",
+    image:"https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=1100&q=85",
+    introHe:"בננה מכילה פחמימות, אשלגן וויטמין B6.",
+    introEn:"Bananas contain carbohydrates, potassium and vitamin B6.",
+    calories:89,protein:1.1,carbs:22.8,fat:0.3,fiber:2.6,sugar:12.2,
+    vitamins:[
+      ["ויטמין B6","0.37 מ״ג"],["ויטמין C","8.7 מ״ג"],
+      ["אשלגן","358 מ״ג"],["מגנזיום","27 מ״ג"]
+    ],
+    vitaminsEn:[
+      ["Vitamin B6","0.37 mg"],["Vitamin C","8.7 mg"],
+      ["Potassium","358 mg"],["Magnesium","27 mg"]
+    ]
+  },
+  {
+    id:"strawberry",he:"תות שדה",en:"Strawberry",emoji:"🍓",category:"berries",
+    image:"https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=1100&q=85",
+    introHe:"תות שדה מכיל ויטמין C, סיבים תזונתיים ופולאט.",
+    introEn:"Strawberries contain vitamin C, dietary fiber and folate.",
+    calories:32,protein:0.7,carbs:7.7,fat:0.3,fiber:2.0,sugar:4.9,
+    vitamins:[
+      ["ויטמין C","58.8 מ״ג"],["ויטמין B9 (פולאט)","24 מק״ג"],
+      ["אשלגן","153 מ״ג"],["מנגן","0.39 מ״ג"]
+    ],
+    vitaminsEn:[
+      ["Vitamin C","58.8 mg"],["Vitamin B9 (Folate)","24 µg"],
+      ["Potassium","153 mg"],["Manganese","0.39 mg"]
+    ]
+  },
+  {
+    id:"kiwi",he:"קיווי",en:"Kiwi",emoji:"🥝",category:"other",
+    image:"https://images.unsplash.com/photo-1585059895524-72359e06133a?auto=format&fit=crop&w=1100&q=85",
+    introHe:"קיווי ירוק הוא מקור לוויטמין C, סיבים תזונתיים ואשלגן.",
+    introEn:"Green kiwi provides vitamin C, dietary fiber and potassium.",
+    calories:61,protein:1.1,carbs:14.7,fat:0.5,fiber:3.0,sugar:9.0,
+    vitamins:[
+      ["ויטמין C","92.7 מ״ג"],["ויטמין K","40.3 מק״ג"],
+      ["אשלגן","312 מ״ג"],["ויטמין E","1.5 מ״ג"]
+    ],
+    vitaminsEn:[
+      ["Vitamin C","92.7 mg"],["Vitamin K","40.3 µg"],
+      ["Potassium","312 mg"],["Vitamin E","1.5 mg"]
+    ]
+  },
+  {
+    id:"watermelon",he:"אבטיח",en:"Watermelon",emoji:"🍉",category:"other",
+    image:"https://images.unsplash.com/photo-1563114773-84221bd62daa?auto=format&fit=crop&w=1100&q=85",
+    introHe:"אבטיח מכיל הרבה מים וגם ליקופן וויטמין C.",
+    introEn:"Watermelon has a high water content and provides lycopene and vitamin C.",
+    calories:30,protein:0.6,carbs:7.6,fat:0.2,fiber:0.4,sugar:6.2,
+    vitamins:[
+      ["ויטמין C","8.1 מ״ג"],["ויטמין A","28 מק״ג RAE"],
+      ["אשלגן","112 מ״ג"],["ליקופן","כ־4,500 מק״ג"]
+    ],
+    vitaminsEn:[
+      ["Vitamin C","8.1 mg"],["Vitamin A","28 µg RAE"],
+      ["Potassium","112 mg"],["Lycopene","about 4,500 µg"]
+    ]
+  },
+  {
+    id:"grapes",he:"ענבים",en:"Grapes",emoji:"🍇",category:"other",
+    image:"https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=1100&q=85",
+    introHe:"ענבים מספקים פחמימות, מעט סיבים ותרכובות צמחיות.",
+    introEn:"Grapes provide carbohydrates, some fiber and plant compounds.",
+    calories:69,protein:0.7,carbs:18.1,fat:0.2,fiber:0.9,sugar:15.5,
+    vitamins:[
+      ["ויטמין C","3.2 מ״ג"],["ויטמין K","14.6 מק״ג"],
+      ["אשלגן","191 מ״ג"],["נחושת","0.13 מ״ג"]
+    ],
+    vitaminsEn:[
+      ["Vitamin C","3.2 mg"],["Vitamin K","14.6 µg"],
+      ["Potassium","191 mg"],["Copper","0.13 mg"]
+    ]
+  },
+  {
+    id:"mango",he:"מנגו",en:"Mango",emoji:"🥭",category:"other",
+    image:"https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=1100&q=85",
+    introHe:"מנגו מכיל ויטמין C, ויטמין A ופחמימות.",
+    introEn:"Mango provides vitamin C, vitamin A and carbohydrates.",
+    calories:60,protein:0.8,carbs:15.0,fat:0.4,fiber:1.6,sugar:13.7,
+    vitamins:[
+      ["ויטמין C","36.4 מ״ג"],["ויטמין A","54 מק״ג RAE"],
+      ["פולאט","43 מק״ג"],["אשלגן","168 מ״ג"]
+    ],
+    vitaminsEn:[
+      ["Vitamin C","36.4 mg"],["Vitamin A","54 µg RAE"],
+      ["Folate","43 µg"],["Potassium","168 mg"]
+    ]
+  },
+  {
+    id:"pineapple",he:"אננס",en:"Pineapple",emoji:"🍍",category:"other",
+    image:"https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=1100&q=85",
+    introHe:"אננס מכיל ויטמין C ומנגן.",
+    introEn:"Pineapple provides vitamin C and manganese.",
+    calories:50,protein:0.5,carbs:13.1,fat:0.1,fiber:1.4,sugar:9.9,
+    vitamins:[
+      ["ויטמין C","47.8 מ״ג"],["מנגן","0.93 מ״ג"],
+      ["ויטמין B6","0.11 מ״ג"],["אשלגן","109 מ״ג"]
+    ],
+    vitaminsEn:[
+      ["Vitamin C","47.8 mg"],["Manganese","0.93 mg"],
+      ["Vitamin B6","0.11 mg"],["Potassium","109 mg"]
+    ]
+  }
+];
 
-      gallery.innerHTML = "";
+const orangePhotos = [
+  {he:"תפוזים טריים",en:"Fresh Oranges",url:"https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=900&q=85"},
+  {he:"תפוזים על העץ",en:"Oranges on a Tree",url:"https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=900&q=85"},
+  {he:"מיץ תפוזים",en:"Orange Juice",url:"https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=900&q=85"},
+  {he:"פלחי תפוז",en:"Orange Slices",url:"https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=900&q=85"},
+  {he:"פירות הדר",en:"Citrus Fruits",url:"https://images.unsplash.com/photo-1596591606975-97ee5cef3a1e?auto=format&fit=crop&w=900&q=85"},
+  {he:"צבעי הטבע",en:"Colors of Nature",url:"https://images.unsplash.com/photo-1557800636-894a64c1696f?auto=format&fit=crop&w=900&q=85"}
+];
 
-      filtered.forEach(photo => {
-        const card = document.createElement("article");
-        card.className = "photo";
+let english = false;
+let category = "all";
+let currentFruit = null;
 
-        const img = document.createElement("img");
-        img.src = photo.image;
-        img.alt = english ? photo.titleEn : photo.title;
-        img.loading = "lazy";
+const $ = id => document.getElementById(id);
 
-        const caption = document.createElement("div");
-        caption.className = "photo-title";
-        caption.textContent = english ? photo.titleEn : photo.title;
+function makePhoto(title, description, url, onClick, emoji="↗", extraClass="") {
+  const card = document.createElement("article");
+  card.className = "photo " + extraClass;
+  card.tabIndex = 0;
+  card.setAttribute("role","button");
 
-        card.append(img, caption);
-        card.addEventListener("click", () => openViewer(photo));
-        gallery.appendChild(card);
-      });
+  const img = document.createElement("img");
+  img.src = url;
+  img.alt = title;
+  img.loading = "lazy";
 
-      document.getElementById("empty").style.display =
-        filtered.length ? "none" : "block";
+  const info = document.createElement("div");
+  info.className = "photo-info";
 
-      document.getElementById("countButton").textContent =
-        english
-          ? `🍊 ${filtered.length} photos`
-          : `🍊 ${filtered.length} תמונות`;
-    }
+  const textBox = document.createElement("div");
+  const h3 = document.createElement("h3");
+  h3.textContent = title;
+  const p = document.createElement("p");
+  p.textContent = description;
+  textBox.append(h3,p);
 
-    function openViewer(photo) {
-      viewerImage.src = photo.image;
-      viewerImage.alt = english ? photo.titleEn : photo.title;
-      viewer.classList.add("open");
-      document.body.style.overflow = "hidden";
-    }
+  const symbol = document.createElement("span");
+  symbol.className = "emoji";
+  symbol.textContent = emoji;
 
-    function closeViewer(event) {
-      if (event && event.target !== viewer) return;
-      viewer.classList.remove("open");
-      document.body.style.overflow = "";
-    }
+  info.append(textBox,symbol);
+  card.append(img,info);
+  card.addEventListener("click",onClick);
+  card.addEventListener("keydown",e=>{
+    if(e.key==="Enter" || e.key===" "){e.preventDefault();onClick();}
+  });
+  return card;
+}
 
-    function toggleLanguage() {
-      english = !english;
+function renderOranges() {
+  const query = $("orangeSearch").value.trim().toLowerCase();
+  const list = orangePhotos.filter(p =>
+    (english ? p.en : p.he).toLowerCase().includes(query)
+  );
 
-      document.documentElement.lang = english ? "en" : "he";
-      document.documentElement.dir = english ? "ltr" : "rtl";
+  $("orangeGallery").replaceChildren();
+  list.forEach(p => $("orangeGallery").append(makePhoto(
+    english?p.en:p.he,
+    english?"Orange gallery":"גלריית תפוזים",
+    p.url,
+    ()=>openImage(p.url,english?p.en:p.he)
+  )));
+  $("orangeEmpty").style.display=list.length?"none":"block";
+}
 
-      document.getElementById("languageButton").textContent =
-        english ? "עברית" : "English";
+function renderFruits() {
+  const query = $("fruitSearch").value.trim().toLowerCase();
+  const list = fruits.filter(f => {
+    const matchesCategory = category==="all" || f.category===category;
+    const matchesSearch = (english?f.en:f.he).toLowerCase().includes(query);
+    return matchesCategory && matchesSearch;
+  });
 
-      document.getElementById("heading").innerHTML = english
-        ? 'A World of <span>Oranges</span>'
-        : 'עולם של <span>תפוזים</span>';
+  $("fruitGallery").replaceChildren();
+  list.forEach(f => $("fruitGallery").append(makePhoto(
+    (english?f.en:f.he)+" "+f.emoji,
+    english?"Tap to explore nutrition":"לחצו לצפייה בערכים התזונתיים",
+    f.image,
+    ()=>openFruit(f.id),
+    "↗",
+    "fruit-card"
+  )));
+  $("fruitEmpty").style.display=list.length?"none":"block";
+}
 
-      document.getElementById("subtitle").innerHTML = english
-        ? "A gallery of color, nature, and freshness.<br>All your orange photos in one place."
-        : "גלריה של צבע, טבע ורעננות.<br>כל התמונות במקום אחד.";
+function openImage(url,title) {
+  const win = window.open(url,"_blank","noopener");
+  if (!win) {
+    // If pop-ups are blocked, show the image in the fruit-style viewer.
+    const fruit = fruits.find(f=>f.image===url);
+    if(fruit) openFruit(fruit.id);
+  }
+}
 
-      search.placeholder = english ? "Search photos..." : "חפש תמונות...";
-      search.setAttribute("aria-label", english ? "Search photos" : "חיפוש תמונות");
+function openFruit(id) {
+  currentFruit=fruits.find(f=>f.id===id);
+  if(!currentFruit)return;
 
-      document.getElementById("footer").textContent = english
-        ? "Made with love for oranges 🍊"
-        : "נוצר באהבה לתפוזים 🍊";
+  const f=currentFruit;
+  $("detailImage").src=f.image;
+  $("detailImage").alt=english?f.en:f.he;
+  $("detailTitle").textContent=f.emoji+" "+(english?f.en:f.he);
+  $("detailSubtitle").textContent=english?"Fruit nutrition guide":"מדריך לערכים התזונתיים של הפרי";
+  $("detailIntro").textContent=english?f.introEn:f.introHe;
 
-      renderGallery();
-    }
+  const labels=english
+    ? [["Calories",f.calories+" kcal"],["Protein",f.protein+" g"],["Carbohydrates",f.carbs+" g"],["Total fat",f.fat+" g"],["Dietary fiber",f.fiber+" g"],["Sugars",f.sugar+" g"]]
+    : [["קלוריות",f.calories+" קק״ל"],["חלבון",f.protein+" גרם"],["פחמימות",f.carbs+" גרם"],["שומן",f.fat+" גרם"],["סיבים תזונתיים",f.fiber+" גרם"],["סוכרים",f.sugar+" גרם"]];
 
-    search.addEventListener("input", renderGallery);
-
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        viewer.classList.remove("open");
-        document.body.style.overflow = "";
-      }
-    });
-
-    renderGallery();
-  </script>
-</body>
-  </html>
-  
+  $("nutritionGrid").replaceChildren();
+  labels.forEach(([label,value])=>{
+    const ite
