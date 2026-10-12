@@ -1,0 +1,449 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orange Gallery 🍊</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --orange: #ff8c24;
+      --glass: rgba(255, 255, 255, 0.13);
+      --border: rgba(255, 255, 255, 0.25);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: white;
+      background:
+        radial-gradient(circle at 15% 10%, #ff9b38 0, transparent 35%),
+        radial-gradient(circle at 85% 80%, #a83208 0, transparent 40%),
+        linear-gradient(135deg, #351204, #111111 65%);
+      background-attachment: fixed;
+    }
+
+    header {
+      padding: 24px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .glass {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    button {
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 11px 18px;
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      transition: 0.25s;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 65px 20px 45px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 8vw, 78px);
+      margin-bottom: 18px;
+      letter-spacing: -2px;
+    }
+
+    .hero h1 span {
+      color: var(--orange);
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .controls {
+      max-width: 1100px;
+      margin: 0 auto 28px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 180px;
+      max-width: 350px;
+      padding: 13px 18px;
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      outline: none;
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      font-size: 15px;
+    }
+
+    .search::placeholder {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .gallery {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .photo {
+      position: relative;
+      overflow: hidden;
+      height: 280px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .photo:hover {
+      transform: translateY(-6px) scale(1.015);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s;
+    }
+
+    .photo:hover img {
+      transform: scale(1.08);
+    }
+
+    .photo::after {
+      content: "";
+      position: absolute;
+      inset: 45% 0 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+      pointer-events: none;
+    }
+
+    .photo-title {
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      left: 18px;
+      z-index: 1;
+      font-size: 17px;
+      font-weight: bold;
+      text-shadow: 0 2px 8px black;
+    }
+
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: rgba(255, 255, 255, 0.6);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .viewer {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      inset: 0;
+      padding: 25px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .viewer.open {
+      display: flex;
+    }
+
+    .viewer img {
+      max-width: 92vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 15px;
+      box-shadow: 0 15px 50px black;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 26px;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 20px;
+      }
+
+      .hero {
+        padding-top: 45px;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding-inline: 12px;
+      }
+
+      .photo {
+        height: 210px;
+        border-radius: 17px;
+      }
+
+      .photo-title {
+        font-size: 14px;
+        bottom: 12px;
+        right: 12px;
+      }
+
+      .controls {
+        padding: 0 12px;
+      }
+
+      .search {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">🍊 Orange Gallery</div>
+    <button id="languageButton" onclick="toggleLanguage()">
+      English
+    </button>
+  </header>
+
+  <section class="hero">
+    <h1 id="heading">עולם של <span>תפוזים</span></h1>
+    <p id="subtitle">
+      גלריה של צבע, טבע ורעננות.<br>
+      כל התמונות במקום אחד.
+    </p>
+  </section>
+
+  <section class="controls">
+    <input
+      class="search"
+      id="search"
+      type="search"
+      placeholder="חפש תמונות..."
+      aria-label="חיפוש תמונות"
+    >
+    <button id="countButton" type="button">🍊 כל התמונות</button>
+  </section>
+
+  <main class="gallery" id="gallery"></main>
+  <div class="empty" id="empty">לא נמצאו תמונות 🍊</div>
+
+  <div class="viewer" id="viewer" role="dialog" aria-modal="true"
+       aria-label="תמונה מוגדלת" onclick="closeViewer(event)">
+    <button class="close" aria-label="סגור" onclick="closeViewer()">
+      ×
+    </button>
+    <img id="viewerImage" src="" alt="Orange enlarged">
+  </div>
+
+  <footer id="footer">
+    נוצר באהבה לתפוזים 🍊
+  </footer>
+
+  <script>
+    const photos = [
+      {
+        title: "תפוזים טריים",
+        titleEn: "Fresh Oranges",
+        image: "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=900&q=85"
+      },
+      {
+        title: "תפוז על העץ",
+        titleEn: "Orange on a Tree",
+        image: "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=900&q=85"
+      },
+      {
+        title: "מיץ תפוזים",
+        titleEn: "Orange Juice",
+        image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=900&q=85"
+      },
+      {
+        title: "תפוז חתוך",
+        titleEn: "Sliced Orange",
+        image: "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=900&q=85"
+      },
+      {
+        title: "צבע כתום",
+        titleEn: "Orange Colors",
+        image: "https://images.unsplash.com/photo-1557800636-894a64c1696f?auto=format&fit=crop&w=900&q=85"
+      },
+      {
+        title: "פירות הדר",
+        titleEn: "Citrus Fruits",
+        image: "https://images.unsplash.com/photo-1596591606975-97ee5cef3a1e?auto=format&fit=crop&w=900&q=85"
+      },
+      {
+        title: "טבע ורעננות",
+        titleEn: "Nature and Freshness",
+        image: "https://images.unsplash.com/photo-1580052614034-c55d20bfee3b?auto=format&fit=crop&w=900&q=85"
+      },
+      {
+        title: "תפוז מקרוב",
+        titleEn: "Orange Close-Up",
+        image: "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=900&q=85"
+      }
+    ];
+
+    let english = false;
+
+    const gallery = document.getElementById("gallery");
+    const search = document.getElementById("search");
+    const viewer = document.getElementById("viewer");
+    const viewerImage = document.getElementById("viewerImage");
+
+    function renderGallery() {
+      const term = search.value.toLowerCase().trim();
+
+      const filtered = photos.filter(photo => {
+        const title = english ? photo.titleEn : photo.title;
+        return title.toLowerCase().includes(term);
+      });
+
+      gallery.innerHTML = "";
+
+      filtered.forEach(photo => {
+        const card = document.createElement("article");
+        card.className = "photo";
+
+        const img = document.createElement("img");
+        img.src = photo.image;
+        img.alt = english ? photo.titleEn : photo.title;
+        img.loading = "lazy";
+
+        const caption = document.createElement("div");
+        caption.className = "photo-title";
+        caption.textContent = english ? photo.titleEn : photo.title;
+
+        card.append(img, caption);
+        card.addEventListener("click", () => openViewer(photo));
+        gallery.appendChild(card);
+      });
+
+      document.getElementById("empty").style.display =
+        filtered.length ? "none" : "block";
+
+      document.getElementById("countButton").textContent =
+        english
+          ? `🍊 ${filtered.length} photos`
+          : `🍊 ${filtered.length} תמונות`;
+    }
+
+    function openViewer(photo) {
+      viewerImage.src = photo.image;
+      viewerImage.alt = english ? photo.titleEn : photo.title;
+      viewer.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeViewer(event) {
+      if (event && event.target !== viewer) return;
+      viewer.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    function toggleLanguage() {
+      english = !english;
+
+      document.documentElement.lang = english ? "en" : "he";
+      document.documentElement.dir = english ? "ltr" : "rtl";
+
+      document.getElementById("languageButton").textContent =
+        english ? "עברית" : "English";
+
+      document.getElementById("heading").innerHTML = english
+        ? 'A World of <span>Oranges</span>'
+        : 'עולם של <span>תפוזים</span>';
+
+      document.getElementById("subtitle").innerHTML = english
+        ? "A gallery of color, nature, and freshness.<br>All your orange photos in one place."
+        : "גלריה של צבע, טבע ורעננות.<br>כל התמונות במקום אחד.";
+
+      search.placeholder = english ? "Search photos..." : "חפש תמונות...";
+      search.setAttribute("aria-label", english ? "Search photos" : "חיפוש תמונות");
+
+      document.getElementById("footer").textContent = english
+        ? "Made with love for oranges 🍊"
+        : "נוצר באהבה לתפוזים 🍊";
+
+      renderGallery();
+    }
+
+    search.addEventListener("input", renderGallery);
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        viewer.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+    });
+
+    renderGallery();
+  </script>
+</body>
+  </html>
+  
